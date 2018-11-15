@@ -1,5 +1,6 @@
 package com.example.user.multiplyrowtypesadapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +14,29 @@ import java.util.List;
 
 public class RvMultiplyAdapter extends RecyclerView.Adapter {
 
-    private List<Model>modelList;
+    private List<Object>modelList;
 
-    public RvMultiplyAdapter(List<Model>modelList){
+    public RvMultiplyAdapter(List<Object>modelList){
         this .modelList = modelList;
     }
-
-
 
 
     @Override
     public int getItemViewType(int position) {
 
-        switch (modelList .get(position).modelType) {
+        Object object = modelList .get(position);
+
+        if(object instanceof Model){
+        return 0;
+        } else
+         if(object instanceof Model2){
+            return 1;
+         } else
+             if(object instanceof Model3){
+            return 2;
+         } else return -1;
+
+      /*  switch (modelList .get(position).modelType) {
             case 0:
                 return Model.TEXT_TYPE;
             case 1:
@@ -34,7 +45,7 @@ public class RvMultiplyAdapter extends RecyclerView.Adapter {
                 return Model.VIEW_TYPE;
             default:
                 return -1;
-        }
+        } */
     }
 
 
@@ -48,23 +59,23 @@ public class RvMultiplyAdapter extends RecyclerView.Adapter {
 
 
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view;
         switch (viewType) {
-            case Model.TEXT_TYPE:
+            case 0:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_1, parent, false);
                 return new FirstTypeHolder(view);
-            case Model.RB_TYPE:
+            case 1:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_2, parent, false);
                 return new SecondTypeHolder(view);
-            case Model.VIEW_TYPE:
+            case 2:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_3, parent, false);
                 return new ThirdTypeHolder(view);
         }
         return null;
+
     }
 
 
@@ -74,24 +85,20 @@ public class RvMultiplyAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int listPosition) {
 
-    Model object = modelList .get(listPosition);
-        if (object != null) {
-        switch (object.modelType) {
-            case Model.TEXT_TYPE:
-           //     ((FirstTypeHolder) holder).txtType.setText(object.text);
+        Object object = modelList .get(listPosition);
 
-                break;
-            case Model.RB_TYPE:
-             //   ((SecondTypeHolder) holder).txtType.setText(object.text);
-              //  ((SecondTypeHolder) holder).image.setImageResource(object.data);
-                break;
-            case Model.VIEW_TYPE:
-
-           //     ((ThirdTypeHolder) holder).txtType.setText(object.text);
+        if(object instanceof Model){
+            ((FirstTypeHolder) holder) .textView .setText(((Model) object) .getInnerText());
+        } else
+        if(object instanceof Model2){
+            ((SecondTypeHolder) holder). radioButton .setChecked(((Model2) object). isChecked());
+        } else
+        if(object instanceof Model3){
+            ((ThirdTypeHolder) holder). button .setBackgroundColor(Color.parseColor(((Model3) object) .getColor()));
+        } else {
 
         }
         }
-    }
 
 
 
